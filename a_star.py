@@ -1,4 +1,4 @@
-from romania_map import map2, straight_to_bucharest
+from romania_map import map, straight_to_bucharest
 from typing import Dict
 import heapq
 
@@ -8,7 +8,6 @@ class node:
         """
         Initialize node from name, parent, and distance
         """
-
         self.name: str = name
         self.parent: node = parent
         self.distance_from_start: int = distance_from_start
@@ -20,8 +19,7 @@ class node:
         """
         Add geographic neighbors to children list
         """
-
-        neighbors: Dict[str, int] = map2[self.name]
+        neighbors: Dict[str, int] = map[self.name]
 
         # Return if already expanded
         if len(self.children):
@@ -40,7 +38,6 @@ class node:
         """
         Return path from start to this node as a string
         """
-        
         if self.parent == None:
             return self.name
         else:
@@ -51,7 +48,7 @@ class node:
         Return estimated cost from start to goal through this node
         """
         return self.distance_from_start + straight_to_bucharest[self.name]
-    
+
     def __lt__(self, other):
         """
         Less than operator for comparing nodes from estimate
@@ -63,26 +60,27 @@ def a_star(start_city: str, end_city: str = "Bucharest") -> str:
     """
     Perform A* search from start_city to end_city
     """
-    if start_city not in map2.keys():
+    if start_city not in map.keys():
         print(f"Start city '{start_city}' not in map.")
         return None
-    
-    if end_city not in map2.keys():
+
+    if end_city not in map.keys():
         print(f"End city '{end_city}' not in map.")
         return None
-    
+
     start = node(start_city, None, 0)
     collapsed_nodes: list[node] = [start]
 
     while True:
-        
+
         collapsed_nodes[0].expand()
-        
+
         for child in heapq.heappop(collapsed_nodes).children:
             heapq.heappush(collapsed_nodes, child)
 
         if collapsed_nodes[0].name == end_city:
             return collapsed_nodes[0].path()
+
 
 # Example usage:
 # print(a_star("Arad"))
