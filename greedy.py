@@ -1,7 +1,5 @@
+from romania_map import map, straight_to_bucharest
 import heapq
-from romania_map import map
-import heapq 
-from romania_map import straight_to_bucharest
 
 def greedy_search_for_bucharest(start, goal):
     # storing the heuristic value, current city, and the path taken
@@ -21,7 +19,7 @@ def greedy_search_for_bucharest(start, goal):
             places_visited += 1
             
             # seeing what neighbor is best
-            for neighbor, distance in map.get(current_node, []):
+            for neighbor, _ in map[current_node].items():
                 if neighbor not in visited:
                     h_neighbor = straight_to_bucharest[neighbor]
                     heapq.heappush(fringe, (h_neighbor, neighbor, path + [neighbor]))
