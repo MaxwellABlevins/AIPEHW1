@@ -34,14 +34,14 @@ class node:
                 )
             )
 
-    def path(self) -> str:
+    def path(self) -> list[str]:
         """
-        Return path from start to this node as a string
+        Return path from start to this node
         """
         if self.parent == None:
-            return self.name
+            return [self.name]
         else:
-            return f"{self.parent.path()}, {self.name}"
+            return self.parent.path() + [self.name]
 
     def estimate(self) -> int:
         """
@@ -56,7 +56,7 @@ class node:
         return self.estimate() < other.estimate()
 
 
-def a_star(start_city: str, end_city: str = "Bucharest") -> str:
+def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int]:
     """
     Perform A* search from start_city to end_city
     """
@@ -79,8 +79,7 @@ def a_star(start_city: str, end_city: str = "Bucharest") -> str:
             heapq.heappush(collapsed_nodes, child)
 
         if collapsed_nodes[0].name == end_city:
-            return collapsed_nodes[0].path()
-
+            return collapsed_nodes[0].path(), collapsed_nodes[0].distance_from_start
 
 # Example usage:
-# print(a_star("Arad"))
+print(a_star("Arad"))
