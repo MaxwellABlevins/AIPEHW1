@@ -82,4 +82,4 @@ def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int]:
             return collapsed_nodes[0].path(), collapsed_nodes[0].distance_from_start
 
 # Example usage:
-print(a_star("Arad"))
+# print(a_star("Arad"))
