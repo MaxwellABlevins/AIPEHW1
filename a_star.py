@@ -1,6 +1,7 @@
 from romania_map import map, straight_to_bucharest
 from typing import Dict
 import heapq
+import io
 
 
 class node:
@@ -83,3 +84,12 @@ def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int]:
 
 # Example usage:
 # print(a_star("Arad"))
+
+def generate_distances_to_bucharest():
+    goal = "Bucharest"
+    distances_to_bucharest: Dict[str, int] = dict()
+    for city in map.keys():
+        distances_to_bucharest[city] = a_star(city, goal)[1]
+        
+    with io.open("distances_to_bucharest.py", 'w') as f:
+        f.write(f"distances_to_bucharest = {str(distances_to_bucharest)}")
