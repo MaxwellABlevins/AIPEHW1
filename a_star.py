@@ -56,7 +56,7 @@ class node:
         return self.estimate() < other.estimate()
 
 
-def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int]:
+def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int, int, int]:
     """
     Perform A* search from start_city to end_city
     """
@@ -69,17 +69,30 @@ def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int]:
         return None
 
     start = node(start_city, None, 0)
-    collapsed_nodes: list[node] = [start]
+    fringe: list[node] = [start]
+    visited = set()
+    nodes_expanded = 0
+    max_fringe_size = 1
 
-    while True:
-
-        collapsed_nodes[0].expand()
-
-        for child in heapq.heappop(collapsed_nodes).children:
-            heapq.heappush(collapsed_nodes, child)
-
-        if collapsed_nodes[0].name == end_city:
-            return collapsed_nodes[0].path(), collapsed_nodes[0].distance_from_start
-
-# Example usage:
-print(a_star("Arad"))
+    while fringe:
+        current = heapq.heappop(fringe)
+        
+        if current.name in visited:
+            continue
+        
+        visited.add(current.name)
+        nodes_expanded += 1
+        
+        if current.name == end_city:
+            return current.path(), current.distance_from_start, nodes_expanded, max_fringe_size
+        
+        current.expand()
+        
+        for child in current.children:
+            if child.name not in visited:
+                heapq.heappush(fringe, child)
+        
+        if len(fringe) > max_fringe_size:
+            max_fringe_size = len(fringe)
+    
+    return None
