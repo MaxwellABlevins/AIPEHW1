@@ -57,7 +57,7 @@ class node:
         return self.estimate() < other.estimate()
 
 
-def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int]:
+def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int, int, int]:
     """
     Perform A* search from start_city to end_city
     """

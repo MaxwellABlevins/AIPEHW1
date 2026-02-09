@@ -6,13 +6,14 @@ def greedy_search_for_bucharest(start, goal):
     fringe = [(straight_to_bucharest[start], start, [start])]
     visited = set()
     places_visited = 0
+    max_fringe_size = 1
 
     while fringe:
         # popping the node for with lowest heuristic value for each
         h_val, current_node, path = heapq.heappop(fringe)
         
         if current_node == goal:
-            return path, places_visited
+            return path, places_visited, max_fringe_size
 
         if current_node not in visited:
             visited.add(current_node)
@@ -23,9 +24,13 @@ def greedy_search_for_bucharest(start, goal):
                 if neighbor not in visited:
                     h_neighbor = straight_to_bucharest[neighbor]
                     heapq.heappush(fringe, (h_neighbor, neighbor, path + [neighbor]))
+            
+            # Track maximum fringe size
+            if len(fringe) > max_fringe_size:
+                max_fringe_size = len(fringe)
 
-    return None, places_visited
+    return None, places_visited, max_fringe_size
 
-path, efficiency = greedy_search_for_bucharest('Arad', 'Bucharest')
+path, efficiency, max_fringe = greedy_search_for_bucharest('Arad', 'Bucharest')
 print(f"Path: {path}")
 print(f"Places visited: {efficiency}")
