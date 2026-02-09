@@ -1,6 +1,7 @@
 from romania_map import map, straight_to_bucharest
 from typing import Dict
 import heapq
+import io
 
 
 class node:
@@ -69,30 +70,26 @@ def a_star(start_city: str, end_city: str = "Bucharest") -> tuple[str, int, int,
         return None
 
     start = node(start_city, None, 0)
-    fringe: list[node] = [start]
-    visited = set()
-    nodes_expanded = 0
-    max_fringe_size = 1
+    collapsed_nodes: list[node] = [start]
 
-    while fringe:
-        current = heapq.heappop(fringe)
+    while True:
+
+        collapsed_nodes[0].expand()
+
+        for child in heapq.heappop(collapsed_nodes).children:
+            heapq.heappush(collapsed_nodes, child)
+
+        if collapsed_nodes[0].name == end_city:
+            return collapsed_nodes[0].path(), collapsed_nodes[0].distance_from_start
+
+# Example usage:
+# print(a_star("Arad"))
+
+def generate_distances_to_bucharest():
+    goal = "Bucharest"
+    distances_to_bucharest: Dict[str, int] = dict()
+    for city in map.keys():
+        distances_to_bucharest[city] = a_star(city, goal)[1]
         
-        if current.name in visited:
-            continue
-        
-        visited.add(current.name)
-        nodes_expanded += 1
-        
-        if current.name == end_city:
-            return current.path(), current.distance_from_start, nodes_expanded, max_fringe_size
-        
-        current.expand()
-        
-        for child in current.children:
-            if child.name not in visited:
-                heapq.heappush(fringe, child)
-        
-        if len(fringe) > max_fringe_size:
-            max_fringe_size = len(fringe)
-    
-    return None
+    with io.open("distances_to_bucharest.py", 'w') as f:
+        f.write(f"distances_to_bucharest = {str(distances_to_bucharest)}")
