@@ -2,15 +2,30 @@
 
 :- initialization(main, program).
 
-valid_entries(M, C) :-
+valid_direction(D) :-
+    D == left;
+    D == right.
+
+safe([M, C]) :-
     between(0, 3, M),
-    between(0, 3, C).
+    between(0, 3, C),
+    (
+        M >= C;
+        M == 0
+    ).
 
-safe(M, C) :-
-    M >= C;
-    M == 0;
-    C == 0.
+safe([M, C, D]) :-
+    valid_direction(D),
+    safe([M, C]),
 
-main() :-
-    safe(2, 3),
+    MO is abs(M-3),
+    CO is abs(C-3),
+
+    safe([MD, CO]).
+
+move([M,C,D], S2, A) :-
+    
+
+main :-
+    safe([3, 3, left]),
     abort().
