@@ -57,40 +57,23 @@ oven_on :-
 
 0.12::wifi_on :- not(light_on), not(heating_on).
 0.70::wifi_on :- light_on, not(heating_on).
-0.90::wifi_on :- light_on.
+0.90::wifi_on :- light_on, heating_on.
 
-% Query 1. P(faulty living room sensor | No motion in living room & light is off).
+% evidence
 evidence(motion_detected(living_room), false).
 evidence(light_on, false).
-
+ 
+% Q1: given no motion in living room and lights off, is the sensor faulty?
 query(faulty_motion_sensor(living_room)).
-clear_evidence().
 
-% Query 2. P(heating | a flash freeze & a working thermostat)
-evidence(flash_freeze).
-evidence(faulty_thermostat, false).
+% Q2: given no motion and lights off, did power fail?
+query(power_failure).
 
+% Q3: given no motion and lights off, is the light sensor faulty?
+query(faulty_light_sensor).
+
+% Q4: given no motion and lights off, is heating on?
 query(heating_on).
-clear_evidence().
 
-% Query 3. P(Bathtub Motion | a tornado & bathroom light is off)
-evidence(tornado).
-evidence(light_switch_on, false).
-
-query(motion_detected(bathtub)).
-clear_evidence().
-
-% Query 4. P(wifi_on | tornado & tsunami & flash_freeze & light off)
-evidence(tornado).
-evidence(tsunami).
-evidence(flash_freeze).
-evidence(light_on, false).
-
-query(wifi_on).
-clear_evidence().
-
-% Query 5. P(someone is home | car is empty & oven is on)
-evidence(car_in_garage, false).
-evidence(oven_on).
-
+% Q5: given no motion and lights off, is someone home?
 query(someone_is_home).
