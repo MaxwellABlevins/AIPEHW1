@@ -37,25 +37,18 @@ full(Board) :- \+ member(e, Board).
 
 % ---------- TODO A1: move/3 ----------
 
-% move(Board, Player, NextBoard, Changed) base case. There should only be one change for the board.
-move([], _, [], Changed) :- Changed == 1.
+% move(+Board, +Player, -NextBoard)
+% place Player in one empty cell
 
-% move(Board, Player, NextBoard, Changed) if heads are same, continue. Else, og head should be e,
-    % new head should be player (x/o), and the board should have not have been updated yet.
-move([Bh | Bt], Player, [Bnh | Bnt], Changed) :-
-    (
-        Bh == Bnh ->
-    move(Bt, Player, Bnt, Changed)
-    ;
-    Bh = e,
-    Bnh = Player,
-    Changed = 0,
-move(Bt, Player, Bnt, 1)
-).
-
-% move(Board, Player, NextBoard) holds if NextBoard results from placing Player in an empty cell.
 move(Board, Player, NextBoard) :-
-    move(Board, Player, NextBoard, 0).
+    nth1(Index, Board, e),          % find empty position
+    replace(Board, Index, Player, NextBoard).
+
+replace([_|T], 1, X, [X|T]).
+replace([H|T], I, X, [H|R]) :-
+    I > 1,
+    I1 is I - 1,
+    replace(T, I1, X, R).
 
 % ---------- TODO A2: terminal/1 and utility/2 Finished by Maxwell----------
 terminal(Board) :-
@@ -92,6 +85,18 @@ minimax_value(Board, Player, Value) :-
 
 % ---------- TODO A4: best_move/4 ----------
 % choose successor with best minimax value for Player
-best_move(_Board, _Player, _BestBoard, _BestValue) :-
-    % TODO
-    fail.
+
+best_move(Board, Player, BestBoard, BestValue) :-
+    findall((Value, NextBoard),
+        ( move(Board, Player, NextBoard),
+          other(Player, NextPlayer),
+          minimax_value(NextBoard, NextPlayer, Value)
+        ),
+        Moves),
+    choose_best(Player, Moves, (BestValue, BestBoard)).
+
+choose_best(x, Moves, Best) :-
+    max_member(Best, Moves).
+
+choose_best(o, Moves, Best) :-
+    min_member(Best, Moves).
