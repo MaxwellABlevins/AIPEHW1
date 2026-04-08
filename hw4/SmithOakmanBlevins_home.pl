@@ -89,7 +89,7 @@ evidence(light_on, false).
 query(wifi_on).
 clear_evidence().
 
-% Query 5. P(wifi_on | tornado & tsunami & flash_freeze & light off)
+% Query 5. P(someone is home | car is empty & oven is on)
 evidence(car_in_garage, false).
 evidence(oven_on).
 
