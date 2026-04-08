@@ -17,7 +17,7 @@
 
 0.05::faulty_motion_sensor(living_room).
 0.05::faulty_motion_sensor(hallway).
-0.004::fault_motion_sensor(bathtub).
+0.004::faulty_motion_sensor(bathtub).
 
 0.02::faulty_light_sensor.
 0.03::faulty_temp_sensor.
